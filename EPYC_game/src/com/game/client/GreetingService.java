@@ -23,6 +23,7 @@ public interface GreetingService extends RemoteService {
 	ArrayList<String> IsGameDone(ArrayList<String> input) throws IllegalArgumentException;
 	ArrayList<ArrayList<ArrayList<String>>> ViewAllGames(ArrayList<String> input) throws IllegalArgumentException;
 
-	
+	ArrayList<String> GetImagesGame(ArrayList<String> input) throws IllegalArgumentException;
+
 	
 }

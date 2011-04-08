@@ -72,6 +72,16 @@ public class EPYC_game implements EntryPoint {
 		});
 		
 		
+		final Button createsetphrase_button = new Button();
+		RootPanel.get("MingTest3").add(createsetphrase_button);
+		createsetphrase_button.setText("Get Set Phrase");
+		createsetphrase_button.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				String username = "MingWang3";
+				SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService, username);
+				RootPanel.get("MingTest3").add(set_phrase);
+			}
+		});
 		
 		//SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService);
 		//RootPanel.get("MingTest3").add(set_phrase);

@@ -2,6 +2,8 @@ package com.game.client;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -11,14 +13,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SetPhraseWidget extends Composite{
-private final GreetingServiceAsync greetingService;
+	private final GreetingServiceAsync greetingService;
+	private final String  username;
 	
-	public SetPhraseWidget(final GreetingServiceAsync greetingService){
+	public SetPhraseWidget(final GreetingServiceAsync greetingService, final String username){
 		this.greetingService = greetingService;
+		this.username = username;
 		
 		ArrayList<String> input = new ArrayList<String>();
-		input.add("MingWang");
-		input.add("1");
+		input.add(username);
 		
 		final VerticalPanel vpanel = new VerticalPanel();
 		initWidget(vpanel);
@@ -31,7 +34,28 @@ private final GreetingServiceAsync greetingService;
 		vpanel.add(hpanel1);
 		vpanel.add(hpanel2);
 		
-		greetingService.GetPictures(input,new AsyncCallback<ArrayList<String>>() {
+		enter_phrase_button.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				ArrayList<String> input = new ArrayList<String>();
+				input.add(username);
+				input.add(enter_phrase_box.getText());
+				greetingService.SubmitPhraseGame(input, new AsyncCallback<ArrayList<String>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+					@Override
+					public void onSuccess(ArrayList<String> result) {
+						// TODO Auto-generated method stub
+					}
+				});
+			}
+		});
+		
+		
+		greetingService.GetImagesGame(input,new AsyncCallback<ArrayList<String>>() {
 			public void onFailure(Throwable caught) {}
 			@Override
 			public void onSuccess(ArrayList<String> result) {

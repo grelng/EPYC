@@ -34,4 +34,7 @@ public interface GreetingServiceAsync {
 	void ViewAllGames(ArrayList<String> input, AsyncCallback<ArrayList<ArrayList<ArrayList<String>>>> callback)
 	throws IllegalArgumentException;
 	
+	void GetImagesGame(ArrayList<String> input, AsyncCallback<ArrayList<String>> callback)
+	throws IllegalArgumentException;
+	
 }

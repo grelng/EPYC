@@ -227,12 +227,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 */	
 	public ArrayList<String> SubmitLinks(ArrayList<String> input)
 			throws IllegalArgumentException {
-		
-		int uid_to_write_to = whoseSheet(input.get(0), RoundNum);
-		int num_users=Integer.parseInt(input.get(1));
-		int start=uid_to_write_to*((int) Math.floor(num_users/2))*NumURLs+NumURLs*((RoundNum-1)/2);
-		for (int i=2; i<Math.min(input.size(),NumURLs+2); i++){
-			URLs[start+i-2]=input.get(i);
+		int round = calcRound();
+		int uid_to_write_to = whoseSheet(input.get(0), round);
+		//int num_users=Integer.parseInt(input.get(1));
+		int start=uid_to_write_to*((int) Math.floor(NumUsers/2))*NumURLs+NumURLs*((round-1)/2);
+		for (int i=1; i<Math.min(input.size(),NumURLs+1); i++){
+			URLs[start+i-1]=input.get(i);
 		}
 		return null;
 	}
@@ -254,10 +254,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	throws IllegalArgumentException{
 		
 		ArrayList<String> resultSet = new ArrayList<String>();
-		int sheetIhave=whoseSheet(input.get(0), RoundNum);
-		int num_users=Integer.parseInt(input.get(1));
-		int LastRound = RoundNum -1;
-		int start=sheetIhave*((int) Math.floor(num_users/2))*NumURLs+NumURLs*((LastRound-1)/2);
+		int round = calcRound();
+		int sheetIhave=whoseSheet(input.get(0), round);
+		//int num_users=Integer.parseInt(input.get(1));
+		
+		int LastRound = round -1;
+		int start=sheetIhave*((int) Math.floor(NumUsers/2))*NumURLs+NumURLs*((LastRound-1)/2);
 		for (int i=0; i<NumURLs; i++){
 			String item=URLs[start+i];
 			if(item!=null){
@@ -348,8 +350,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		// TODO Auto-generated method stub
 		//whoseSheet() will return a string that tells me whose sheet to write to
 		int round = calcRound();
-		int index = whoseSheet(input.get(1), round);
-		Sentences[round*NumUsers+index] = input.get(0);
+		int index = whoseSheet(input.get(0), round);
+		Sentences[(round-1)*(index+1) - 1] = input.get(1);
 		return null;
 	}
 
@@ -375,21 +377,31 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 */
 	private int calcRound() {
 		int sentence_rounds = 0;
-		String counter = Sentences[0];
-		while(!(counter == (null))) {
-			sentence_rounds++;
-			counter = Sentences[sentence_rounds];
+//		String counter = Sentences[0];
+		for(int i=0;i<Sentences.length;i++) {
+			if(Sentences[i] != null) {
+				sentence_rounds++;
+			}
 		}
+//		while(!(counter == (null))) {
+//			sentence_rounds++;
+//			counter = Sentences[sentence_rounds];
+//		}
 		//sentence_rounds = Sentences.length;
 		
-		sentence_rounds = (int)Math.floor((sentence_rounds+1)/(NumUsers));
+		sentence_rounds = (int)Math.floor((sentence_rounds)/(NumUsers));
 		int pic_rounds = 0;
-		counter = URLs[0];
-		while(!(counter == (null))) {
-			pic_rounds++;
-			counter = URLs[pic_rounds];
+//		counter = URLs[0];
+		for(int i=0;i<URLs.length;i++) {
+			if(URLs[i] != null) {
+				pic_rounds++;
+			}
 		}
-		pic_rounds = (int)Math.floor((pic_rounds+1)/(NumUsers*NumURLs));
+//		while(!(counter == (null))) {
+//			pic_rounds++;
+//			counter = URLs[pic_rounds];
+//		}
+		pic_rounds = (int)Math.floor((pic_rounds)/(NumUsers*NumURLs));
 		return sentence_rounds+pic_rounds+1;
 	}
 	
