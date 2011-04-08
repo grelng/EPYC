@@ -41,7 +41,15 @@ public class SetPictureWidget extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String p = ";";
+				greetingService.SubmitLinks(selected_urls, new AsyncCallback<ArrayList<String>>() {
+					public void onFailure(Throwable caught) {}
+
+					@Override
+					public void onSuccess(ArrayList<String> result) {
+						//We Are Done with this widget
+					}
+				});
+					
 			}
 		}
 		
