@@ -1,0 +1,58 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: auto; /* center in viewport */
+    width:  970px;
+}
+
+#header {
+    font-size: 200%;
+    text-align: center;
+}
+
+#doc {
+    text-align: center;
+    height: 100%;
+}
+
+#content {
+    text-align: center;
+}
+
+#doc .align-stub {
+    height: 100%;
+}
+
+#doc .align-stub,
+#content {
+    vertical-align: middle;
+}
+
+#content .sentence,
+#content input {
+    width: 100%;
+    font-size: 200%;
+    text-align: center;
+    border-width: 1px;
+    border-color: #ccc;
+}
+
+.choices img,
+.pictures img {
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+.sentence a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    background: #99aabb;
+    border-width: 1px;
+    border-color: #000;
+
+}

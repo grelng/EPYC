@@ -1,187 +1,168 @@
 package com.game.client;
 
-import com.game.shared.FieldVerifier;
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class EPYC_game implements EntryPoint {
-	/**
-	 * The message displayed to the user when the server cannot be reached or
-	 * returns an error.
-	 */
-	private static final String SERVER_ERROR = "An error occurred while "
-			+ "attempting to contact the server. Please check your network "
-			+ "connection and try again.";
-
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
+	public static final String SERVER_ERROR = "An error occurred uh ohz";
+	public int step;
+	final public int pushPhrase = 1;
+	final public int pushPhraseWait = 2;
+	final public int setPicture = 3;
+	final public int setPictureWait = 4;
+	final public int setPhrase = 5;
+	final public int setPhraseWait = 6;
+	final private Widget placeholder = new PlaceholderWidget();
+	final private Label debug = new Label();
+	public String username = "";
+	
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	/**
-	 * This is the entry point method.
-	 */
 	public void onModuleLoad() {
-		final Button sendButton = new Button("Send");
-		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
-		final Label errorLabel = new Label();
+		step = 0;
+		drawMe();
+	}
 
-		// We can add style names to widgets
-		sendButton.addStyleName("sendButton");
+	private void drawMe() {
+		RootPanel content = RootPanel.get("content");
+		Widget curr = nextWidget();
+		content.add(curr);
+		content.add(debug); // a debug pane
+	}
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
-		RootPanel.get("sendButtonContainer").add(sendButton);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
-		
-		
-		//Ming Test
-		PushPhraseWidget push_phrase_widget = new PushPhraseWidget(greetingService);
-		RootPanel.get("MingTest").add(push_phrase_widget);
-		
-		final Button createsetpicture_button = new Button();
-		createsetpicture_button.setText("Get Set Picture");
-		RootPanel.get("MingTest2").add(createsetpicture_button);
-		
-		final String username = "MingWang";
-		
-		createsetpicture_button.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				SetPictureWidget set_picture = new SetPictureWidget(greetingService, username);
-				RootPanel.get("MingTest2").add(set_picture);
-			}
-		});
-		
-		
-		final Button createsetphrase_button = new Button();
-		RootPanel.get("MingTest3").add(createsetphrase_button);
-		createsetphrase_button.setText("Get Set Phrase");
-		createsetphrase_button.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				String username = "MingWang3";
-				SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService, username);
-				RootPanel.get("MingTest3").add(set_phrase);
-			}
-		});
-		
-		//SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService);
-		//RootPanel.get("MingTest3").add(set_phrase);
-		//ViewAllGamesWidget allgames_widget = new ViewAllGamesWidget(greetingService);
-		//RootPanel.get("MingTest4").add(allgames_widget);
-		
-		// Focus the cursor on the name field when the app loads
-		nameField.setFocus(true);
-		nameField.selectAll();
-
-		// Create the popup dialog box
-		final DialogBox dialogBox = new DialogBox();
-		dialogBox.setText("Remote Procedure Call");
-		dialogBox.setAnimationEnabled(true);
-		final Button closeButton = new Button("Close");
-		// We can set the id of a widget by accessing its Element
-		closeButton.getElement().setId("closeButton");
-		final Label textToServerLabel = new Label();
-		final HTML serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
-		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-		dialogVPanel.add(closeButton);
-		dialogBox.setWidget(dialogVPanel);
-
-		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				dialogBox.hide();
-				sendButton.setEnabled(true);
-				sendButton.setFocus(true);
-			}
-		});
-
-		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
-			/**
-			 * Fired when the user clicks on the sendButton.
-			 */
-			public void onClick(ClickEvent event) {
-				sendNameToServer();
-			}
-
-			/**
-			 * Fired when the user types in the nameField.
-			 */
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
-			}
-
-			/**
-			 * Send the name from the nameField to the server and wait for a response.
-			 */
-			private void sendNameToServer() {
-				// First, we validate the input.
-				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
-					return;
-				}
-
-				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
-				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
-						new AsyncCallback<String>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-
-							public void onSuccess(String result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-						});
-			}
+	public void advance() {
+		RootPanel content = RootPanel.get("content");
+		// insert a call here to fade out the current widget
+		content.clear();
+		content.add(nextWidget());
+	}
+	
+	private Widget nextWidget() {
+		step++;
+		switch (step) {
+		case pushPhrase:
+			return new AlanPushPhraseWidget(this, greetingService);
+		case pushPhraseWait:
+			return new WaitingWidget(this, 0);
+		case setPicture:
+			return new AlanSetPictureWidget(this, greetingService);
+		case setPictureWait:
+			return new WaitingWidget(this, 1);
+		case setPhrase:
+			return new AlanSetPhraseWidget(this, greetingService);
+		case setPhraseWait:
+			return new WaitingWidget(this, 2);
+		default:
+			return placeholder;
 		}
+	}
 
-		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
-		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+	public class PlaceholderWidget extends Composite {
+		public PlaceholderWidget() {
+			Label placeholder = new Label("This is a placeholder");
+			initWidget(placeholder);
+		}
+	}
+	
+	/**
+	 * Displays waiting text while continuously polling server for the OK 
+	 * to advance to next step.
+	 * @author aleung
+	 *
+	 */
+	public class WaitingWidget extends Composite {
+		final private static int REFRESH_INTERVAL = 100; // every second
+		final private Timer pollTimer;
+		final private EPYC_game game;
+		final private Random generator;
+		private Label message;
+		private boolean ready = false;
+		private int iteration;
+		
+		
+		public WaitingWidget(final EPYC_game game, int iteration) {
+			this.game = game;
+			this.generator = new Random();
+			drawMe();
+			pollTimer = newTimer();
+			this.iteration = iteration;
+		}
+		
+		public void drawMe() {
+			message = new Label("Waiting for other players");
+			initWidget(message);
+		}
+		
+		private Timer newTimer() {
+			Timer t = new Timer() {
+				@Override
+				public void run() {
+					if(canAdvance()) {
+						game.advance();
+						this.cancel(); // stop the timer
+					}
+				}
+			};
+			t.scheduleRepeating(REFRESH_INTERVAL);
+			return t;
+		}
+		
+		public boolean canAdvance() {
+			/* call greetingService to check for the OK to advance */
+			message.setText(message.getText() + ".");
+			
+			if(iteration == 0){
+				ArrayList<String> input = new ArrayList<String>();
+				game.greetingService.IstStep1Done(input, new AsyncCallback<ArrayList<String>>() {
+					public void onFailure(Throwable caught) {}
+	
+					public void onSuccess(ArrayList<String> result) {
+						if(result.get(0).equals("true")){
+							ready = true;
+						}
+					}
+				});
+			}
+			if(iteration == 1){
+				ArrayList<String> input = new ArrayList<String>();
+				game.greetingService.IsStep3Done(input, new AsyncCallback<ArrayList<String>>() {
+					public void onFailure(Throwable caught) {}
+	
+					public void onSuccess(ArrayList<String> result) {
+						if(result.get(0).equals("true")){
+							ready = true;
+						}
+					}
+				});
+			}
+			if(iteration == 2){
+				ArrayList<String> input = new ArrayList<String>();
+				game.greetingService.IsStep4Done(input, new AsyncCallback<ArrayList<String>>() {
+					public void onFailure(Throwable caught) {}
+	
+					public void onSuccess(ArrayList<String> result) {
+						if(result.get(0).equals("true")){
+							ready = true;
+						}
+					}
+				});
+			}
+			
+			if(ready){
+				ready = false;
+				return true;
+			}
+			return false;
+		}
 	}
 }

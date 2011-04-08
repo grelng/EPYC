@@ -178,7 +178,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			throws IllegalArgumentException {
 		
 		// TODO return Step1Done, change all instances of this method to boolean
-		return null;
+		ArrayList<String> ret = new ArrayList<String>();
+		ret.add(Boolean.toString(Step1Done));
+		return ret;
 	}
 
 	/**
