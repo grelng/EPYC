@@ -233,8 +233,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		int uid_to_write_to = whoseSheet(input.get(0), round);
 		//int num_users=Integer.parseInt(input.get(1));
 		int start=uid_to_write_to*((int) Math.floor(NumUsers/2))*NumURLs+NumURLs*((round-1)/2);
-		for (int i=1; i<Math.min(input.size(),NumURLs+1); i++){
-			URLs[start+i-1]=input.get(i);
+		for (int i=1; i<NumURLs+1; i++){
+			if(i<Math.min(input.size(),NumURLs+1)){
+				URLs[start+i-1]=input.get(i);
+			}
+			else{
+				URLs[start+i-1] = "";
+			}
 		}
 		return null;
 	}
