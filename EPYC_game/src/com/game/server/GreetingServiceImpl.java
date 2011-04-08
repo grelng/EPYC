@@ -277,6 +277,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<String> IsStep3Done(ArrayList<String> input)
 			throws IllegalArgumentException {
+		int round = calcRound();
+		ArrayList<String> ret = new ArrayList<String>();
+		
+		if(round % 2 == 0) {
+			ret.add(Boolean.toString(false));
+		}
+		else {
+			ret.add(Boolean.toString(true));
+		}
+		return ret;
+		/*
 		// TODO Auto-generated method stub
 		boolean[] doneround = new boolean[URLs.length/NumURLs];
 
@@ -297,6 +308,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<String> ret = new ArrayList<String>();
 		ret.add(Boolean.toString(returnval));
 		return ret;
+		*/
 	}
 
 	@Override
@@ -453,8 +465,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<String> IsStep4Done(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int round = calcRound();
+		ArrayList<String> ret = new ArrayList<String>();
+		
+		if(round % 2 == 1) {
+			ret.add(Boolean.toString(false));
+		}
+		else {
+			ret.add(Boolean.toString(true));
+		}
+		return ret;
 	}
 
 	@Override
