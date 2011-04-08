@@ -1,8 +1,22 @@
 package com.game.server;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Collections;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.game.client.GreetingService;
 import com.game.shared.FieldVerifier;
@@ -148,9 +162,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<String> GetPhraseGame(ArrayList<String> input)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		ArrayList<String> ret = new ArrayList<String>();
-		ret.add("Ming Wang");
-		return ret;
+		return null;
 	}
 
 	@Override
@@ -177,8 +189,59 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<String> GetPictures(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> results = new ArrayList();
+	    String query_url;
+		try {
+			query_url = "http://query.yahooapis.com/v1/public/yql?q=" + 
+				URLEncoder.encode("SELECT * FROM flickr.photos.search WHERE text=\""+input.get(0)+"\"", "UTF-8")+
+				"&format=xml";
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+	    
+	    URL u;
+	    HttpURLConnection conn;
+		try {
+			u = new URL(query_url);
+			conn = (HttpURLConnection) u.openConnection();
+		    conn.setRequestMethod("GET");
+	        conn.setDoOutput(true);
+	        conn.setReadTimeout(10000);
+	        conn.connect();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+
+
+        
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(conn.getInputStream());
+			doc.getDocumentElement().normalize();
+	        NodeList nl=doc.getElementsByTagName("results");
+	        Node current_result = nl.item(0).getFirstChild();
+	 
+	        while (current_result != null){
+        		String farm=current_result.getAttributes().getNamedItem("farm").getNodeValue();
+        		String server= current_result.getAttributes().getNamedItem("server").getNodeValue();
+        		String id = current_result.getAttributes().getNamedItem("id").getNodeValue();
+        		String secret = current_result.getAttributes().getNamedItem("secret").getNodeValue();
+        	
+        	
+        		results.add(String.format("http://farm%s.static.flickr.com/%s/%s_%s_t.jpg", farm, server,id, secret));
+        	
+        		current_result=current_result.getNextSibling();
+        	}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+        
+        return results;
 	}
 
 	@Override
