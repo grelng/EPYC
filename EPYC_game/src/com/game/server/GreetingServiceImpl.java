@@ -1,6 +1,7 @@
 package com.game.server;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Collections;
 
 import com.game.client.GreetingService;
@@ -10,13 +11,19 @@ import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;
 
-
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
+
+
+	private String[] tokenizeString(String sentence) throws IllegalArgumentException {
+		sentence = sentence.toLowerCase();
+		String[] words = sentence.split("\\s+");
+		return words;
+	}
 
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
@@ -90,17 +97,50 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				.replaceAll(">", "&gt;");
 	}
 
+	
+	Hashtable<String,String> Sentences = new Hashtable<String,String>();
+	int NumUsers = 0;
+	//ArrayList<String> Sentences = new ArrayList<String>();
+	boolean Step1Done = false;
+	
+	/**
+	 * Initialize the game.
+	 * 
+	 * @param input ArrayList of strings - always in this order:
+	 * User ID
+	 * Number of users
+	 * Sentence
+	 * @return none
+	 */
 	@Override
 	public ArrayList<String> PushPhraseInit(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+
+		if(!Sentences.contains(input.get(2))) {
+			Sentences.put(input.get(0),input.get(2));
+		}
+		if(NumUsers == 0) {
+			NumUsers = Integer.parseInt(input.get(1));
+		}
+
+		// Check if UserIDs contains as many users as NumUsers
+		if(NumUsers > 0 && Sentences.size() == NumUsers) {
+			Step1Done = true;
+		}
 		return null;
 	}
 
+	/**
+	 * check if step 1 is done
+	 * We know it's done because every client is added to UserIDs.
+	 * 
+	 * @param none
+	 * @return boolean value Step1Done
+	 */
 	@Override
 	public ArrayList<String> IstStep1Done(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		// TODO return Step1Done, change all instances of this method to boolean
 		return null;
 	}
 
