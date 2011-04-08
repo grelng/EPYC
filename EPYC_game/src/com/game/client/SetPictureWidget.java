@@ -19,7 +19,7 @@ public class SetPictureWidget extends Composite {
 	private final ArrayList<String> selected_urls;
 	private final String username;
 	
-	public SetPictureWidget(final GreetingServiceAsync greetingService, String username){
+	public SetPictureWidget(final GreetingServiceAsync greetingService, final String username){
 		this.greetingService = greetingService;
 		this.selected_urls = new ArrayList<String>();
 		this.username = username;
@@ -42,7 +42,10 @@ public class SetPictureWidget extends Composite {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				greetingService.SubmitLinks(selected_urls, new AsyncCallback<ArrayList<String>>() {
+				ArrayList<String> input = new ArrayList<String>();
+				input.add(username);
+				input.addAll(selected_urls);
+				greetingService.SubmitLinks(input, new AsyncCallback<ArrayList<String>>() {
 					public void onFailure(Throwable caught) {}
 
 					@Override

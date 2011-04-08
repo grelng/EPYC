@@ -142,13 +142,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		if(NumUsers == 0) {
 			NumUsers = Integer.parseInt(input.get(1));
 			Usercount = NumUsers;
-			Sentences = new String[(int) (Usercount*Math.ceil(Usercount/2))];
-			URLs = new String[(int) (Usercount*Math.ceil(Usercount/2)*NumURLs)];
+			Sentences = new String[(int) (Usercount*Math.ceil((float)Usercount/2.0))];
+			URLs = new String[(int) (Usercount*Math.ceil((float)Usercount/2.0)*NumURLs)];
 			UserIDs = new String[2*Usercount];
 		}
 		
 		Sentences[sentence_ctr++] = input.get(2);
-		UserIDs[userids_ctr++] = input.get(2);
+		UserIDs[userids_ctr++] = input.get(0);
+		UserIDs[userids_ctr++] = Integer.toString(userids_ctr/2-1);
 		// Check if we've inputed all the sentences from the first round
 		Step1Done = true;
 		if(NumUsers > 0) {
@@ -193,13 +194,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<String> ret = new ArrayList<String>();
 //		ret.add("Ming Wang");
 		//whoseSheet() will return a string that tells me whose sheet to read from
-		String sheet = "";
 		int round = calcRound();
-		int index = findItem(sheet,UserIDs) + 1;
-		ret.add(Sentences[index*NumUsers+round]);
+		int index = whoseSheet(input.get(0),round);
+		ret.add(Sentences[(round-1)*(index+1) - 1]);
 		return ret;
 	}
-
+	
+	
 	@Override
 	public ArrayList<String> QueryImage(ArrayList<String> input)
 			throws IllegalArgumentException {
@@ -334,9 +335,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
         return results;
 	}
 
+
 	/**
 	 * stores the sentence submitted by the user in the ArrayList Sentences
-	 * Sentences is structured as [user 0's sentences, user 1's sentences, ...]
+	 * Sentences is structured as [round 1's sentences, round 2's sentences, ...]
 	 * @param input - ArrayList of strings, in the order Sentence, uid
 	 * @return none
 	 */
@@ -345,10 +347,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		//whoseSheet() will return a string that tells me whose sheet to write to
-		String sheet = "";
 		int round = calcRound();
-		int index = findItem(sheet,UserIDs) + 1;
-		Sentences[index*NumUsers+round] = input.get(0);
+		int index = whoseSheet(input.get(1), round);
+		Sentences[round*NumUsers+index] = input.get(0);
 		return null;
 	}
 
@@ -375,14 +376,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	private int calcRound() {
 		int sentence_rounds = 0;
 		String counter = Sentences[0];
-		while(!counter.equals(null)) {
+		while(!(counter == (null))) {
 			sentence_rounds++;
 			counter = Sentences[sentence_rounds];
 		}
+		//sentence_rounds = Sentences.length;
+		
 		sentence_rounds = (int)Math.floor((sentence_rounds+1)/(NumUsers));
 		int pic_rounds = 0;
 		counter = URLs[0];
-		while(!counter.equals(null)) {
+		while(!(counter == (null))) {
 			pic_rounds++;
 			counter = URLs[pic_rounds];
 		}
@@ -405,6 +408,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (int i=0; i <UserIDs.length; i++){
 			if (UserIDs[i].contentEquals(userID)){
 				myIndex=i;
+				break;
 			}
 		}
 		if (myIndex==-1){

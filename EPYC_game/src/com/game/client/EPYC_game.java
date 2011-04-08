@@ -74,7 +74,7 @@ public class EPYC_game implements EntryPoint {
 		
 		
 		//SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService);
-		//RootPanel.get("MingTest2").add(set_phrase);
+		//RootPanel.get("MingTest3").add(set_phrase);
 		//ViewAllGamesWidget allgames_widget = new ViewAllGamesWidget(greetingService);
 		//RootPanel.get("MingTest4").add(allgames_widget);
 		
