@@ -447,8 +447,33 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<ArrayList<ArrayList<String>>> ViewAllGames(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<ArrayList<ArrayList<String>>> result = new ArrayList<ArrayList<ArrayList<String>>> ();
+		for (int i=0; i < NumUsers; i++){
+			ArrayList<ArrayList<String>> user_sheet = new ArrayList<ArrayList<String>> ();
+			ArrayList<String> name = new ArrayList<String>();
+			name.add(UserIDs[i*2]);
+			user_sheet.add(name);
+			for (int j=0; j<NumUsers;j++){
+				ArrayList<String> entry = new ArrayList<String>();
+				if (j%2==0){
+					//Sentence
+					entry.add(Sentences[j*NumUsers/2+i]);
+					user_sheet.add(entry);
+				} else {
+					//Image
+					int start=(i*(NumUsers-1)/2*NumURLs)+(j-1)/2;
+					for (int k=0; k<NumURLs;k++){
+						String u=URLs[start+k];
+						if (u != null){
+							entry.add(u);
+						}
+					}
+				}
+				user_sheet.add(entry);
+			}
+			result.add(user_sheet);
+		}
+		return result;
 	}
 
 }
