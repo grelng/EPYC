@@ -207,10 +207,65 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	/**
+	 * Stores the pictures a user selected during a round into the right spot
+	 * 
+	 * @param input ArrayList of strings - always in this order:
+	 * User ID
+	 * Number of users
+	 * first link
+	 * ...
+	 * last link
+	 * 
+	 * The urls are stored [user 1's sheet, user 2's sheet, ....]
+	 * each sheet is stored [first set of pics, second set of pics, ...]
+	 * a set of pictures is at most NumURLs
+	 * 
+	 * @return none
+	 */	
 	public ArrayList<String> SubmitLinks(ArrayList<String> input)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		
+		int uid_to_write_to = whoseSheet(input.get(0), RoundNum);
+		int num_users=Integer.parseInt(input.get(1));
+		int start=uid_to_write_to*((int) Math.floor(num_users/2))*NumURLs+NumURLs*((RoundNum-1)/2);
+		for (int i=2; i<Math.min(input.size(),NumURLs+2); i++){
+			URLs[start+i-2]=input.get(i);
+		}
 		return null;
+	}
+	
+	/**
+	 * Retrieves the pictures a user must describe for the round
+	 * 
+	 * @param input ArrayList of strings - always in this order:
+	 * User ID
+	 * Number of users
+	 * 
+	 * The urls are stored [user 1's sheet, user 2's sheet, ....]
+	 * each sheet is stored [first set of pics, second set of pics, ...]
+	 * a set of pictures is at most NumURLs
+	 * 
+	 * @return none
+	 */		
+	public ArrayList<String>GetImagesGame(ArrayList<String> input) 
+	throws IllegalArgumentException{
+		
+		ArrayList<String> resultSet = new ArrayList<String>();
+		int sheetIhave=whoseSheet(input.get(0), RoundNum);
+		int num_users=Integer.parseInt(input.get(1));
+		int LastRound = RoundNum -1;
+		int start=sheetIhave*((int) Math.floor(num_users/2))*NumURLs+NumURLs*((LastRound-1)/2);
+		for (int i=0; i<NumURLs; i++){
+			String item=URLs[start+i];
+			if(item!=null){
+				resultSet.add(item);
+			}else{
+				break;
+			}
+		}
+		return resultSet;
+
 	}
 
 	@Override
@@ -332,6 +387,30 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		pic_rounds = (int)Math.floor((pic_rounds+1)/(NumUsers*NumURLs));
 		return sentence_rounds+pic_rounds+1;
+	}
+	
+	
+	/**
+	 * @param userID
+	 * @param round
+	 * 
+	 * figures out whose sheet you are currently writing to (returns the uid)
+	 * -1 on error
+	 * 
+	 * @return
+	 */
+	public int whoseSheet (String userID, int round){
+		int myIndex=-1;
+		for (int i=0; i <UserIDs.length; i++){
+			if (UserIDs[i].contentEquals(userID)){
+				myIndex=i;
+			}
+		}
+		if (myIndex==-1){
+			return -1;
+		}
+		int my_uid=Integer.parseInt(UserIDs[myIndex+1]);
+		return Integer.parseInt(UserIDs[2*((my_uid+round-1) % (UserIDs.length/2))+1]);
 	}
 	
 	@Override
