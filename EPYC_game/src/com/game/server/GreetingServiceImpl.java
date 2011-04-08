@@ -278,7 +278,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<String> IsStep3Done(ArrayList<String> input)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		boolean[] doneround = new boolean[URLs.length/NumURLs];
+
+		for(int i=0; i<URLs.length/NumURLs;i++) {
+			doneround[i] = false;
+			for(int j=0;j<NumURLs;j++) {
+				if(URLs[i*NumURLs+j] != null) {
+					doneround[i] = true;
+				}
+			}
+		}
+		boolean returnval = true;
+		for(int i=0; i<doneround.length;i++) {
+			if(doneround[i] == false) {
+				returnval = false;
+			}
+		}
+		ArrayList<String> ret = new ArrayList<String>();
+		ret.add(Boolean.toString(returnval));
+		return ret;
 	}
 
 	@Override
