@@ -57,6 +57,8 @@ public class EPYC_game implements EntryPoint {
 		//Ming Test
 		PushPhraseWidget push_phrase_widget = new PushPhraseWidget(greetingService);
 		RootPanel.get("MingTest").add(push_phrase_widget);
+		SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService);
+		RootPanel.get("MingTest2").add(set_phrase);
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
