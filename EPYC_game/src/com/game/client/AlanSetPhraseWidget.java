@@ -56,14 +56,17 @@ public class AlanSetPhraseWidget extends Composite {
 			}
 
 			private void sendSentence() {
+				ArrayList<String> input = new ArrayList<String>();
+				input.add(game.username);
+				input.add(inputSentence.getText());
 				String sentence = inputSentence.getText();
-				greetingService.greetServer(sentence,
-						new AsyncCallback<String>() {
+				greetingService.SubmitPhraseGame(input,
+						new AsyncCallback<ArrayList<String>>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
 							}
 
-							public void onSuccess(String result) {
+							public void onSuccess(ArrayList<String> result) {
 								/* todo: send sentence to server */
 								game.advance();
 							}

@@ -198,7 +198,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		//whoseSheet() will return a string that tells me whose sheet to read from
 		int round = calcRound();
 		int index = whoseSheet(input.get(0),round);
-		ret.add(Sentences[(round-1)*(index+1) - 1]);
+		ret.add(Sentences[(round-1)/2*NumUsers + (index)]);
 		return ret;
 	}
 	
@@ -388,7 +388,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		//whoseSheet() will return a string that tells me whose sheet to write to
 		int round = calcRound();
 		int index = whoseSheet(input.get(0), round);
-		Sentences[(round-1)*(index+1) - 1] = input.get(1);
+		Sentences[(round/2)*NumUsers + (index)] = input.get(1);
 		return null;
 	}
 
@@ -487,7 +487,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<String> IsGameDone(ArrayList<String> input)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		int round = calcRound();
+		ArrayList<String> ret = new ArrayList<String>();
+		if(round == 4){
+			ret.add("true");
+			return ret;
+		}
+		ret.add("false");
+		return ret;
 	}
 
 	@Override

@@ -89,6 +89,8 @@ public class EPYC_game implements EntryPoint {
 		final private EPYC_game game;
 		final private static int REFRESH_INTERVAL = 100; // every second
 		private int game_state = 0;	//0 means repoll, 1 not done, 2 means done
+		final private Timer pollTimer;
+		private Label message;
 		
 		private Timer newTimer() {
 			Timer t = new Timer() {
@@ -109,8 +111,15 @@ public class EPYC_game implements EntryPoint {
 			return t;
 		}
 		
+		public void drawMe() {
+			message = new Label("Waiting for other players");
+			initWidget(message);
+		}
+		
 		public GameFinishedWidget(final EPYC_game game){
 			this.game = game;
+			drawMe();
+			pollTimer = newTimer();
 		}
 		
 		int isGameFinished(){
@@ -119,10 +128,10 @@ public class EPYC_game implements EntryPoint {
 				public void onFailure(Throwable caught) {}
 
 				public void onSuccess(ArrayList<String> result) {
-					if(result.get(0).equals("1")){
+					if(result.get(0).equals("false")){
 						game_state = 1;
 					}
-					if(result.get(0).equals("2")){
+					if(result.get(0).equals("true")){
 						game_state = 2;
 					}
 				}
