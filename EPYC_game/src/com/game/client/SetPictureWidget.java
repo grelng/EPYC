@@ -37,23 +37,24 @@ public class SetPictureWidget extends Composite {
 		//Callback When I click on the pictures
 		class ClickPictureHandler implements ClickHandler {
 			int index;
+			String url;
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			
-			public void setQuery(int index){
+			public void setQuery(int index, String url){
 				this.index = index;
+				this.url = url;
 			}
 			
 			public void onClick(ClickEvent event) {
-				sendNameToServer();
-			}
-
-
-			/**
-			 * Send the name from the nameField to the server and wait for a response.
-			 */
-			private void sendNameToServer() {
+				String p = ";";
+				selected_urls.set(index, url);
+				hpanel3.clear();
+				for(int i = 0; i < selected_urls.size(); i++){
+					Image image = new Image(selected_urls.get(i));
+					hpanel3.add(image);
+				}
 			}
 		}
 		
@@ -63,12 +64,14 @@ public class SetPictureWidget extends Composite {
 		//Callback for clicking Submit
 		class ClickPhraseHandler implements ClickHandler {
 			String query_string;
+			int index;
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			
-			public void setQuery(String query){
+			public void setQuery(String query, int index){
 				this.query_string = query;
+				this.index = index;
 			}
 			
 			public void onClick(ClickEvent event) {
@@ -91,6 +94,10 @@ public class SetPictureWidget extends Composite {
 						hpanel2.clear();
 						for(int i = 0; i < result.size(); i++){
 							Image image = new Image(result.get(i));
+							ClickPictureHandler handler = new ClickPictureHandler();
+							handler.setQuery(index, result.get(i));
+							image.addClickHandler(handler);
+							
 							hpanel2.add(image);
 						}
 					}
@@ -114,7 +121,7 @@ public class SetPictureWidget extends Composite {
 				for(int i = 0; i < split_string.length; i++){
 					final HTML phrase_word = new HTML(split_string[i]);
 					ClickPhraseHandler handler = new ClickPhraseHandler();
-					handler.setQuery(split_string[i]);
+					handler.setQuery(split_string[i], i);
 					phrase_word.addClickHandler(handler);
 					
 					hpanel1.add(phrase_word);
