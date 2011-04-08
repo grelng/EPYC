@@ -37,7 +37,7 @@ public class AlanPushPhraseWidget extends Composite {
 			private void sendSentence() {
 				ArrayList<String> input = new ArrayList<String>();
 				input.add(userId.getText());
-				input.add("3");
+				input.add("5");
 				input.add(inputSentence.getText());
 				game.username = userId.getText();
 				

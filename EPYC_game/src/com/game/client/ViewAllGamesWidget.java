@@ -45,11 +45,15 @@ public class ViewAllGamesWidget extends Composite{
 							else{
 								//Even Will be List of Pictures
 								ArrayList<String> picture_urls = new ArrayList<String>();
+								HorizontalPanel pic_panel = new HorizontalPanel();
 								for(int picture_idx = 0; picture_idx < result.get(game_idx).get(step_idx).size(); picture_idx++){
 									picture_urls.add(result.get(game_idx).get(step_idx).get(picture_idx));
+									if(result.get(game_idx).get(step_idx).get(picture_idx).length() == 0)
+										continue;
 									Image image = new Image(result.get(game_idx).get(step_idx).get(picture_idx));
-									game_panel.add(image);
+									pic_panel.add(image);
 								}
+								game_panel.add(pic_panel);
 							}
 						}
 					}

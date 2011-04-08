@@ -489,7 +489,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		// TODO Auto-generated method stub
 		int round = calcRound();
 		ArrayList<String> ret = new ArrayList<String>();
-		if(round == 4){
+		if(round == 6){
 			ret.add("true");
 			return ret;
 		}
@@ -511,7 +511,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				if (j%2==0){
 					//Sentence
 					entry.add(Sentences[j*NumUsers/2+i]);
-					user_sheet.add(entry);
+					//user_sheet.add(entry);
 				} else {
 					//Image
 					int start=(i*(NumUsers-1)/2*NumURLs)+(j-1)/2;
