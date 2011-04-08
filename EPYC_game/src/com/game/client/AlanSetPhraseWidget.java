@@ -102,6 +102,8 @@ public class AlanSetPhraseWidget extends Composite {
 						if (result == null)
 							return;
 						for (int i = 0; i < Math.min(5, result.size()); i++) {
+							if(result.get(i).length() == 0)
+								continue;
 							Image image = new Image(result.get(i));
 							pictures.add(image);
 						}
