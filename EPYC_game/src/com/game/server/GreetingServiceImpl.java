@@ -111,10 +111,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				.replaceAll(">", "&gt;");
 	}
 
-	
-	Hashtable<String,String> Sentences = new Hashtable<String,String>();
+	ArrayList<String> UserIDs = new ArrayList<String>();
+	ArrayList<String> Sentences = new ArrayList<String>();
+	ArrayList<String> URLs = new ArrayList<String>();
+	int Usercount = 0;
 	int NumUsers = 0;
-	//ArrayList<String> Sentences = new ArrayList<String>();
+	int RoundNum = 0;
 	boolean Step1Done = false;
 	
 	/**
@@ -131,7 +133,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			throws IllegalArgumentException {
 
 		if(!Sentences.contains(input.get(2))) {
-			Sentences.put(input.get(0),input.get(2));
+			Sentences.add(input.get(2));
+		}
+		if(!UserIDs.contains(input.get(0))) {
+			UserIDs.add(input.get(0));
+			UserIDs.add(Integer.toString(Usercount++));
 		}
 		if(NumUsers == 0) {
 			NumUsers = Integer.parseInt(input.get(1));
@@ -154,6 +160,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<String> IstStep1Done(ArrayList<String> input)
 			throws IllegalArgumentException {
+		
 		// TODO return Step1Done, change all instances of this method to boolean
 		return null;
 	}
