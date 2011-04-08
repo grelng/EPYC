@@ -141,6 +141,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 		if(NumUsers == 0) {
 			NumUsers = Integer.parseInt(input.get(1));
+			Usercount = NumUsers;
 			Sentences = new String[(int) (Usercount*Math.ceil(Usercount/2))];
 			URLs = new String[(int) (Usercount*Math.ceil(Usercount/2)*NumURLs)];
 			UserIDs = new String[2*Usercount];

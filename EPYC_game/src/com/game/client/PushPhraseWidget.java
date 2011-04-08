@@ -60,7 +60,7 @@ public class PushPhraseWidget extends Composite {
 			private void sendNameToServer() {
 				ArrayList<String> input = new ArrayList<String>();
 				input.add(User_ID_Box.getText());
-				input.add("4");
+				input.add("3");
 				input.add(Phrase_Box.getText());
 				greetingService.PushPhraseInit(input, new AsyncCallback<ArrayList<String>>() {
 					public void onFailure(Throwable caught) {

@@ -57,9 +57,27 @@ public class EPYC_game implements EntryPoint {
 		//Ming Test
 		PushPhraseWidget push_phrase_widget = new PushPhraseWidget(greetingService);
 		RootPanel.get("MingTest").add(push_phrase_widget);
-		SetPictureWidget set_phrase = new SetPictureWidget(greetingService);
-		RootPanel.get("MingTest2").add(set_phrase);
-
+		
+		final Button createsetpicture_button = new Button();
+		createsetpicture_button.setText("Get Set Picture");
+		RootPanel.get("MingTest2").add(createsetpicture_button);
+		
+		final String username = "MingWang";
+		
+		createsetpicture_button.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				SetPictureWidget set_picture = new SetPictureWidget(greetingService, username);
+				RootPanel.get("MingTest2").add(set_picture);
+			}
+		});
+		
+		
+		
+		//SetPhraseWidget set_phrase = new SetPhraseWidget(greetingService);
+		//RootPanel.get("MingTest2").add(set_phrase);
+		//ViewAllGamesWidget allgames_widget = new ViewAllGamesWidget(greetingService);
+		//RootPanel.get("MingTest4").add(allgames_widget);
+		
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();

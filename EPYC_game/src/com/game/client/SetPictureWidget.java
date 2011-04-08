@@ -17,11 +17,12 @@ public class SetPictureWidget extends Composite {
 	
 	private final GreetingServiceAsync greetingService;
 	private final ArrayList<String> selected_urls;
+	private final String username;
 	
-	public SetPictureWidget(final GreetingServiceAsync greetingService){
+	public SetPictureWidget(final GreetingServiceAsync greetingService, String username){
 		this.greetingService = greetingService;
 		this.selected_urls = new ArrayList<String>();
-		
+		this.username = username;
 		
 		final VerticalPanel vpanel = new VerticalPanel();
 		final HorizontalPanel hpanel1 = new HorizontalPanel();
@@ -129,7 +130,7 @@ public class SetPictureWidget extends Composite {
 		
 		
 		ArrayList<String> input = new ArrayList<String>();
-		input.add("Ming");
+		input.add(username);
 		input.add("1");
 		greetingService.GetPhraseGame(input, new AsyncCallback<ArrayList<String>>() {
 			public void onFailure(Throwable caught) {}
