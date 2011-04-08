@@ -21,7 +21,7 @@ public interface GreetingService extends RemoteService {
 	ArrayList<String> SubmitPhraseGame(ArrayList<String> input) throws IllegalArgumentException;
 	ArrayList<String> IsStep4Done(ArrayList<String> input) throws IllegalArgumentException;
 	ArrayList<String> IsGameDone(ArrayList<String> input) throws IllegalArgumentException;
-	ArrayList<String> ViewAllGames(ArrayList<String> input) throws IllegalArgumentException;
+	ArrayList<ArrayList<ArrayList<String>>> ViewAllGames(ArrayList<String> input) throws IllegalArgumentException;
 
 	
 	

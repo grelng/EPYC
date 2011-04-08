@@ -31,7 +31,7 @@ public interface GreetingServiceAsync {
 	throws IllegalArgumentException;
 	void IsGameDone(ArrayList<String> input, AsyncCallback<ArrayList<String>> callback)
 	throws IllegalArgumentException;
-	void ViewAllGames(ArrayList<String> input, AsyncCallback<ArrayList<String>> callback)
+	void ViewAllGames(ArrayList<String> input, AsyncCallback<ArrayList<ArrayList<ArrayList<String>>>> callback)
 	throws IllegalArgumentException;
 	
 }

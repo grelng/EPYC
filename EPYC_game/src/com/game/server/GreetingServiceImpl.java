@@ -275,7 +275,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public ArrayList<String> ViewAllGames(ArrayList<String> input)
+	public ArrayList<ArrayList<ArrayList<String>>> ViewAllGames(ArrayList<String> input)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
