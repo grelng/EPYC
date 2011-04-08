@@ -500,6 +500,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<ArrayList<ArrayList<String>>> ViewAllGames(ArrayList<String> input)
 			throws IllegalArgumentException {
+		
 		ArrayList<ArrayList<ArrayList<String>>> result = new ArrayList<ArrayList<ArrayList<String>>> ();
 		for (int i=0; i < NumUsers; i++){
 			ArrayList<ArrayList<String>> user_sheet = new ArrayList<ArrayList<String>> ();
@@ -511,13 +512,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				if (j%2==0){
 					//Sentence
 					entry.add(Sentences[j*NumUsers/2+i]);
-					//user_sheet.add(entry);
 				} else {
 					//Image
-					int start=(i*(NumUsers-1)/2*NumURLs)+(j-1)/2;
+					int start=(i*(NumUsers-1)*NumURLs/2)+((j-1)/2)*NumURLs;
 					for (int k=0; k<NumURLs;k++){
 						String u=URLs[start+k];
-						if (u != null){
+						if (u != ""){
 							entry.add(u);
 						}
 					}
@@ -528,5 +528,4 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		return result;
 	}
-
 }
