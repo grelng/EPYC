@@ -1,10 +1,15 @@
 package com.game.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.game.client.GreetingService;
 import com.game.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheException;
+import net.sf.jsr107cache.CacheManager;
+
 
 /**
  * The server side implementation of the RPC service.
@@ -31,6 +36,43 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 		return "Hello, " + input + "!<br><br>I am running " + serverInfo
 				+ ".<br><br>It looks like you are using:<br>" + userAgent;
+	}
+	
+	//Utility Functions for using the memcache
+	public boolean isPresentCache(String key){
+		try{
+			Cache cache;
+			cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
+			return cache.containsKey(key);
+		}
+		catch(CacheException e){
+			return false; 
+		}
+	}
+	public Object getCached(String key){
+		if(isPresentCache(key)){
+			try{
+				Cache cache;
+				cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
+				return cache.get(key);
+			}
+			catch(CacheException e){
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
+	public void putCached(String key, Object value){
+		try{
+			Cache cache;
+			cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
+			cache.put(key, value);
+		}
+		catch(CacheException e){
+
+		}
 	}
 
 	/**
