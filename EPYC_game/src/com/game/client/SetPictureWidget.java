@@ -27,12 +27,26 @@ public class SetPictureWidget extends Composite {
 		final HorizontalPanel hpanel1 = new HorizontalPanel();
 		final HorizontalPanel hpanel2 = new HorizontalPanel();
 		final HorizontalPanel hpanel3 = new HorizontalPanel();
+		final Button submit_picture_button = new Button();
+		submit_picture_button.setText("Submit Pictures");
 		
 		vpanel.add(hpanel1);
 		vpanel.add(hpanel2);
 		vpanel.add(hpanel3);
+		vpanel.add(submit_picture_button);
 		
 		initWidget(vpanel);
+		
+		class SubmitPictureHandler implements ClickHandler {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				String p = ";";
+			}
+		}
+		
+		SubmitPictureHandler submit_picture_handler = new SubmitPictureHandler();
+		submit_picture_button.addClickHandler(submit_picture_handler);
 		
 		//Callback When I click on the pictures
 		class ClickPictureHandler implements ClickHandler {
