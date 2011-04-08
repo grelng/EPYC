@@ -162,7 +162,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<String> GetPhraseGame(ArrayList<String> input)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> ret = new ArrayList<String>();
+		ret.add("Ming Wang");
+		return ret;
 	}
 
 	@Override

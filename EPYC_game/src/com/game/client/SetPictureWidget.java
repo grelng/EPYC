@@ -82,7 +82,7 @@ public class SetPictureWidget extends Composite {
 			private void sendNameToServer() {
 				ArrayList<String> input = new ArrayList<String>();
 				input.add(query_string);
-				greetingService.QueryImage(input, new AsyncCallback<ArrayList<String>>() {
+				greetingService.GetPictures(input, new AsyncCallback<ArrayList<String>>() {
 					public void onFailure(Throwable caught) {
 						
 					}
