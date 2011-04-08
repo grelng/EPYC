@@ -21,6 +21,7 @@ public class EPYC_game implements EntryPoint {
 	final public int setPictureWait = 4;
 	final public int setPhrase = 5;
 	final public int setPhraseWait = 6;
+	final public int gameEndWait = 7;
 	final private Widget placeholder = new PlaceholderWidget();
 	final private Label debug = new Label();
 	public String username = "";
@@ -47,6 +48,13 @@ public class EPYC_game implements EntryPoint {
 		content.add(nextWidget());
 	}
 	
+	public void finish(){
+		RootPanel content = RootPanel.get("content");
+		// insert a call here to fade out the current widget
+		content.clear();
+		content.add(new ViewAllGamesWidget(this.greetingService));
+	}
+	
 	private Widget nextWidget() {
 		step++;
 		switch (step) {
@@ -62,8 +70,11 @@ public class EPYC_game implements EntryPoint {
 			return new AlanSetPhraseWidget(this, greetingService);
 		case setPhraseWait:
 			return new WaitingWidget(this, 2);
+		case gameEndWait:
+			return new GameFinishedWidget(this);
 		default:
-			return placeholder;
+			step = setPicture;
+			return new AlanSetPictureWidget(this, greetingService);
 		}
 	}
 
@@ -71,6 +82,53 @@ public class EPYC_game implements EntryPoint {
 		public PlaceholderWidget() {
 			Label placeholder = new Label("This is a placeholder");
 			initWidget(placeholder);
+		}
+	}
+	
+	public class GameFinishedWidget extends Composite {
+		final private EPYC_game game;
+		final private static int REFRESH_INTERVAL = 100; // every second
+		private int game_state = 0;	//0 means repoll, 1 not done, 2 means done
+		
+		private Timer newTimer() {
+			Timer t = new Timer() {
+				@Override
+				public void run() {
+					if(isGameFinished() == 2) {
+						//game.advance();
+						game.finish();
+						this.cancel(); // stop the timer
+					}
+					if(isGameFinished() == 1) {
+						game.advance();
+						this.cancel(); // stop the timer
+					}
+				}
+			};
+			t.scheduleRepeating(REFRESH_INTERVAL);
+			return t;
+		}
+		
+		public GameFinishedWidget(final EPYC_game game){
+			this.game = game;
+		}
+		
+		int isGameFinished(){
+			ArrayList<String> input = new ArrayList<String>();
+			game.greetingService.IsGameDone(input, new AsyncCallback<ArrayList<String>>() {
+				public void onFailure(Throwable caught) {}
+
+				public void onSuccess(ArrayList<String> result) {
+					if(result.get(0).equals("1")){
+						game_state = 1;
+					}
+					if(result.get(0).equals("2")){
+						game_state = 2;
+					}
+				}
+			});
+			
+			return game_state;
 		}
 	}
 	

@@ -43,8 +43,7 @@ public class AlanSetPhraseWidget extends Composite {
 	
 	public void drawMe() {
 		ArrayList<String> input = new ArrayList<String>();
-		input.add("Apple Jacks");
-		input.add("1");
+		input.add(game.username);
 		
 		pictures = new FlowPanel();
 		final TextBox inputSentence = new TextBox();
@@ -88,7 +87,7 @@ public class AlanSetPhraseWidget extends Composite {
 	}
 	
 	public void fetchPictures(ArrayList<String> input) {
-		greetingService.GetPictures(input,
+		greetingService.GetImagesGame(input,
 				new AsyncCallback<ArrayList<String>>() {
 					public void onFailure(Throwable caught) {
 						
