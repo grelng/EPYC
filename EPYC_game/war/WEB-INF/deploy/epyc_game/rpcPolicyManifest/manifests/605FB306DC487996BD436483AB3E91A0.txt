@@ -1,0 +1,2 @@
+serviceClass: com.game.client.GreetingService
+path: 0118FA8216301CE8A273A9DB211420A1.gwt.rpc
