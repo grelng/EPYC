@@ -126,6 +126,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	int urls_ctr = 0;
 	boolean Step1Done = false;
 	
+	
+	
+	ArrayList<String> users = new ArrayList<String>();
+	ArrayList<Integer> userids = new ArrayList<Integer>();
+	ArrayList<ArrayList<ArrayList<String>>> games;
+	boolean Step1Done_new = false;
+	
 	/**
 	 * Initialize the game; check if the first round is finished
 	 * 
@@ -138,13 +145,38 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<String> PushPhraseInit(ArrayList<String> input)
 			throws IllegalArgumentException {
-
+		String username = input.get(0);
+		
 		if(NumUsers == 0) {
 			NumUsers = Integer.parseInt(input.get(1));
 			Usercount = NumUsers;
 			Sentences = new String[(int) (Usercount*Math.ceil((float)Usercount/2.0))];
 			URLs = new String[(int) (Usercount*Math.ceil((float)Usercount/2.0)*NumURLs)];
 			UserIDs = new String[2*Usercount];
+			
+			games = new ArrayList<ArrayList<ArrayList<String>>>();
+			users = new ArrayList<String>();
+			userids = new ArrayList<Integer>();
+			for(int i = 0; i < NumUsers; i++){
+				ArrayList<ArrayList<String>> game = new ArrayList<ArrayList<String>>();
+				games.add(game);
+			}
+			
+		}
+		
+		//Adding users
+		users.add(username);
+		userids.add(users.size() - 1);
+		int user_idx = users.size() - 1;
+		ArrayList<String> game_move = new ArrayList<String>();
+		game_move.add(input.get(2));
+		games.get(user_idx).add(game_move);
+		
+		Step1Done_new = true;
+		for(int i = 0; i < games.size(); i++){
+			if(games.get(i).size() < 1){
+				Step1Done_new = false;
+			}
 		}
 		
 		Sentences[sentence_ctr++] = input.get(2);
